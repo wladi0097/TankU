@@ -1,0 +1,6 @@
+.import/
+export.cfg
+*.translation
+.mono/
+data_*/
+dist/

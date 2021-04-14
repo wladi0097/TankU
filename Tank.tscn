@@ -1,0 +1,53 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://tank.png" type="Texture" id=1]
+[ext_resource path="res://Tank.gd" type="Script" id=2]
+[ext_resource path="res://tank_canon.png" type="Texture" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 32.4129, 25.4787 )
+
+[node name="Tank" type="KinematicBody2D"]
+collision_mask = 2147483649
+script = ExtResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( -0.123596, -0.0199509 )
+shape = SubResource( 1 )
+
+[node name="ShootTimer" type="Timer" parent="."]
+
+[node name="canon" type="Node2D" parent="."]
+position = Vector2( -3.14981, 0.314987 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Sprite" type="Sprite" parent="canon"]
+position = Vector2( 11.4968, -0.0781212 )
+texture = ExtResource( 3 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Shootpoint" type="Node2D" parent="canon"]
+position = Vector2( 50.0058, -0.0992126 )
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="canon"]
+position = Vector2( 44.7449, -0.0992126 )
+emitting = false
+amount = 20
+lifetime = 0.2
+one_shot = true
+explosiveness = 0.5
+spread = 66.29
+initial_velocity = 204.3
+scale_amount = 5.0
+color = Color( 0.482353, 0.482353, 0.482353, 1 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+smoothing_enabled = true
