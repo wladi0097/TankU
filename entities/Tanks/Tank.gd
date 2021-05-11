@@ -1,10 +1,13 @@
 extends KinematicBody2D
 
+export var isPlayer : bool = false
+
 onready var canon := $canon
 onready var shootPoint := $canon/Shootpoint
 onready var shootTimer := $ShootTimer
 onready var collision := $MainCollision
 onready var bulletDetectCollision := $BulletCollision/CollisionPolygon2D
+onready var camera := $Camera2D
 onready var sprite := $Sprite
 onready var animationPLayer := $AnimationPlayer
 onready var bullet = preload("res://entities/projectiles/Bullet.tscn")
@@ -17,6 +20,8 @@ var isDead = false
 
 func _ready():
 	shootTimer.connect("timeout", self, "enableShoot")
+	if !isPlayer:
+		camera.current = false
 	pass
 	
 func enableShoot():
@@ -27,6 +32,9 @@ func _on_BulletCollision_body_entered(bullet):
 	die()
 
 func _input(event):
+	if !isPlayer:
+		return
+		
 	if canShoot && event.is_action_pressed("leftClick"):
 		canShoot = false
 
@@ -34,7 +42,6 @@ func _input(event):
 		bullet_instance.position = shootPoint.global_position
 		bullet_instance.look_at(get_global_mouse_position())
 		bullet_instance.set_bullet_direction(Vector2(1, 0).rotated(canon.global_rotation))
-#		bullet_instance.apply_impulse(Vector2(), Vector2(bulletSpeed, 0).rotated(canon.global_rotation))
 		
 		get_tree().get_root().call_deferred("add_child", bullet_instance)
 		$canon/CPUParticles2D.emitting = true
@@ -42,6 +49,10 @@ func _input(event):
 		
 func _physics_process(delta):
 	if isDead:
+		return
+	
+	if !isPlayer:
+		ai(delta)
 		return
 	
 	var movement = Vector2(0, 0)
@@ -60,6 +71,9 @@ func _physics_process(delta):
 	
 	canon.look_at(get_global_mouse_position())
 
+func ai(delta):
+	pass
+	
 func die():
 	isDead = true
 	animationPLayer.play("die")
