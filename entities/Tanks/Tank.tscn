@@ -47,7 +47,7 @@ __meta__ = {
 }
 
 [node name="Shootpoint" type="Node2D" parent="canon"]
-position = Vector2( 50.0058, -0.0992126 )
+position = Vector2( 57.6748, 0.018776 )
 
 [node name="CPUParticles2D" type="CPUParticles2D" parent="canon"]
 position = Vector2( 44.7449, -0.0992126 )
