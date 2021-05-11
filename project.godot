@@ -18,6 +18,10 @@ config/name="TankU"
 run/main_scene="res://maps/Map_01.tscn"
 config/icon="res://icon.png"
 
+[display]
+
+mouse_cursor/custom_image="res://ressources/cursor.png"
+
 [input]
 
 up={
