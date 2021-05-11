@@ -10,13 +10,12 @@ config_version=4
 
 _global_script_classes=[  ]
 _global_script_class_icons={
-
 }
 
 [application]
 
 config/name="TankU"
-run/main_scene="res://Map_01.tscn"
+run/main_scene="res://maps/Map_01.tscn"
 config/icon="res://icon.png"
 
 [input]
@@ -60,4 +59,3 @@ leftClick={
 quality/driver/driver_name="GLES2"
 vram_compression/import_etc=true
 vram_compression/import_etc2=false
-environment/default_environment="res://default_env.tres"

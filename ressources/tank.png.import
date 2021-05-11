@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/tank_canon.png-b826d419d3fd36beb5a3632bbf1fd477.stex"
+path="res://.import/tank.png-30a525ed39057184e5a36b4a39cddbba.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://tank_canon.png"
-dest_files=[ "res://.import/tank_canon.png-b826d419d3fd36beb5a3632bbf1fd477.stex" ]
+source_file="res://ressources/tank.png"
+dest_files=[ "res://.import/tank.png-30a525ed39057184e5a36b4a39cddbba.stex" ]
 
 [params]
 

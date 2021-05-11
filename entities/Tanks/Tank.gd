@@ -3,7 +3,7 @@ extends KinematicBody2D
 onready var canon := $canon
 onready var shootPoint := $canon/Shootpoint
 onready var shootTimer := $ShootTimer
-onready var bullet = preload("res://Bullet.tscn")
+onready var bullet = preload("res://entities/projectiles/Bullet.tscn")
 
 var moveSpeed = 300
 var rotationSpeed = 2
