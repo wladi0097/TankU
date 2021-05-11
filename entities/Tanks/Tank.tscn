@@ -1,11 +1,8 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://ressources/tank.png" type="Texture" id=1]
 [ext_resource path="res://entities/Tanks/Tank.gd" type="Script" id=2]
 [ext_resource path="res://ressources/tank_canon.png" type="Texture" id=3]
-
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 32.4129, 25.4787 )
 
 [node name="Tank" type="KinematicBody2D"]
 collision_mask = 2147483649
@@ -14,9 +11,9 @@ script = ExtResource( 2 )
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 1 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 position = Vector2( -0.123596, -0.0199509 )
-shape = SubResource( 1 )
+polygon = PoolVector2Array( -31.6739, -25.0857, 25.9112, -25.1741, 32.0983, -17.3075, 32.1905, 17.1625, 25.8696, 25.2628, -31.8621, 25.3096, -31.8621, 6.67439, -29.1932, 7.00215, -29.0996, -6.57626, -31.9557, -6.52944 )
 
 [node name="ShootTimer" type="Timer" parent="."]
 
