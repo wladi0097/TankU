@@ -20,7 +20,9 @@ var isDead = false
 
 func _ready():
 	shootTimer.connect("timeout", self, "enableShoot")
-	if !isPlayer:
+	if isPlayer:
+		Global.player = self
+	else:
 		camera.current = false
 	pass
 	
@@ -35,17 +37,8 @@ func _input(event):
 	if !isPlayer:
 		return
 		
-	if canShoot && event.is_action_pressed("leftClick"):
-		canShoot = false
-
-		var bullet_instance = bullet.instance()
-		bullet_instance.position = shootPoint.global_position
-		bullet_instance.look_at(get_global_mouse_position())
-		bullet_instance.set_bullet_direction(Vector2(1, 0).rotated(canon.global_rotation))
-		
-		get_tree().get_root().call_deferred("add_child", bullet_instance)
-		$canon/CPUParticles2D.emitting = true
-		shootTimer.start()
+	if event.is_action_pressed("leftClick"):
+		shoot()
 		
 func _physics_process(delta):
 	if isDead:
@@ -72,8 +65,27 @@ func _physics_process(delta):
 	canon.look_at(get_global_mouse_position())
 
 func ai(delta):
-	pass
+	if !Global.playerExists():
+		return
+		
+	canon.look_at(Global.getGlobalPlayerPosition())
+	shoot()
+		
+func shoot():
+	if !canShoot:
+		return
+		
+	canShoot = false
+
+	var bullet_instance = bullet.instance()
+	bullet_instance.position = shootPoint.global_position
+	bullet_instance.look_at(get_global_mouse_position())
+	bullet_instance.set_bullet_direction(Vector2(1, 0).rotated(canon.global_rotation))
 	
+	get_tree().get_root().call_deferred("add_child", bullet_instance)
+	$canon/CPUParticles2D.emitting = true
+	shootTimer.start()
+
 func die():
 	isDead = true
 	animationPLayer.play("die")
