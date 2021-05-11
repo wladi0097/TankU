@@ -2,10 +2,8 @@ extends KinematicBody2D
 
 var speed = 350
 var velocity = Vector2()
-
-func _ready():
-	pass
-
+onready var animationPlayer := $AnimationPlayer
+onready var sprite := $Sprite
 
 func _physics_process(delta):
 	var collision = move_and_collide(velocity * delta)
@@ -13,16 +11,16 @@ func _physics_process(delta):
 		velocity = velocity.bounce(collision.normal)
 	
 		if "Bullet" in collision.collider.name:
-#			collision.collider.get_node("explode").emitting = true
-			collision.collider.queue_free()
+			die(collision.collider)
+			die(self)
 			
-#			self.get_node("explode").emitting = true
-			self.queue_free()
 	pass
 
 func set_bullet_direction(direction: Vector2):
 	velocity = direction * speed
-
-
-func _on_Area2D_body_entered(body):
-	print(body)
+	
+func die(bulletEntity):
+	bulletEntity.sprite.visible = false
+	bulletEntity.animationPlayer.play("die")
+	yield(animationPlayer, "animation_finished")
+	bulletEntity.queue_free()

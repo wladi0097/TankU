@@ -1,8 +1,24 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://ressources/tank.png" type="Texture" id=1]
 [ext_resource path="res://entities/Tanks/Tank.gd" type="Script" id=2]
 [ext_resource path="res://ressources/tank_canon.png" type="Texture" id=3]
+
+[sub_resource type="Animation" id=1]
+resource_name = "die"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/path = NodePath("explode:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
 
 [node name="Tank" type="KinematicBody2D"]
 collision_mask = 2147483649
@@ -11,7 +27,7 @@ script = ExtResource( 2 )
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 1 )
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+[node name="MainCollision" type="CollisionPolygon2D" parent="."]
 position = Vector2( -0.123596, -0.0199509 )
 polygon = PoolVector2Array( -31.6739, -25.0857, 25.9112, -25.1741, 32.0983, -17.3075, 32.1905, 17.1625, 25.8696, 25.2628, -31.8621, 25.3096, -31.8621, 6.67439, -29.1932, 7.00215, -29.0996, -6.57626, -31.9557, -6.52944 )
 
@@ -45,6 +61,35 @@ initial_velocity = 204.3
 scale_amount = 5.0
 color = Color( 0.482353, 0.482353, 0.482353, 1 )
 
+[node name="explode" type="CPUParticles2D" parent="."]
+emitting = false
+amount = 100
+lifetime = 0.2
+one_shot = true
+emission_shape = 2
+emission_rect_extents = Vector2( 1, 1 )
+direction = Vector2( 0, 0 )
+spread = 180.0
+initial_velocity = 250.0
+tangential_accel = -23.66
+angle = -61.9
+scale_amount = 3.0
+scale_amount_random = 0.11
+color = Color( 0.996078, 0.0235294, 0.0235294, 1 )
+
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
 smoothing_enabled = true
+
+[node name="BulletCollision" type="Area2D" parent="."]
+collision_layer = 24
+collision_mask = 24
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="BulletCollision"]
+position = Vector2( -0.123596, -0.0199509 )
+polygon = PoolVector2Array( -33.8521, -26.1293, 28.2076, -27.1911, 33.8709, -18.8142, 34.6968, 17.407, 25.8479, 26.9637, -33.1442, 27.1996, -33.7341, 6.43441, -29.8406, 5.96247, -29.8406, -5.12805, -34.442, -6.77983 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/die = SubResource( 1 )
+
+[connection signal="body_entered" from="BulletCollision" to="." method="_on_BulletCollision_body_entered"]

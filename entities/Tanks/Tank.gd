@@ -3,12 +3,17 @@ extends KinematicBody2D
 onready var canon := $canon
 onready var shootPoint := $canon/Shootpoint
 onready var shootTimer := $ShootTimer
+onready var collision := $MainCollision
+onready var bulletDetectCollision := $BulletCollision/CollisionPolygon2D
+onready var sprite := $Sprite
+onready var animationPLayer := $AnimationPlayer
 onready var bullet = preload("res://entities/projectiles/Bullet.tscn")
 
 var moveSpeed = 300
 var rotationSpeed = 2
 var bulletSpeed = 350
 var canShoot = true
+var isDead = false
 
 func _ready():
 	shootTimer.connect("timeout", self, "enableShoot")
@@ -16,6 +21,9 @@ func _ready():
 	
 func enableShoot():
 	canShoot = true
+	
+func _on_BulletCollision_body_entered(body):
+	die()
 
 func _input(event):
 	if canShoot && event.is_action_pressed("leftClick"):
@@ -32,6 +40,8 @@ func _input(event):
 		shootTimer.start()
 		
 func _physics_process(delta):
+	if isDead:
+		return
 	
 	var movement = Vector2(0, 0)
 	
@@ -48,4 +58,9 @@ func _physics_process(delta):
 	self.move_and_slide(movement * moveSpeed)
 	
 	canon.look_at(get_global_mouse_position())
-	pass
+
+func die():
+	isDead = true
+	animationPLayer.play("die")
+	yield(animationPLayer, "animation_finished")
+	queue_free()
