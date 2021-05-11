@@ -22,7 +22,8 @@ func _ready():
 func enableShoot():
 	canShoot = true
 	
-func _on_BulletCollision_body_entered(body):
+func _on_BulletCollision_body_entered(bullet):
+	bullet.destroySelf()
 	die()
 
 func _input(event):
