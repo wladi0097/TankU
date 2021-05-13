@@ -32,8 +32,8 @@ func _ready():
 func enableShoot():
 	canShoot = true
 	
-func _on_BulletCollision_body_entered(bullet):
-	bullet.destroySelf()
+func _on_BulletCollision_body_entered(enteredBullet):
+	enteredBullet.destroySelf()
 	die()
 
 func _input(event):
@@ -43,16 +43,16 @@ func _input(event):
 	if event.is_action_pressed("leftClick"):
 		shoot()
 		
-func _physics_process(delta):
+func _physics_process(_delta):
 	if isDead:
 		return
 	
 	if isPlayer:
-		playerControll(delta)
+		playerControll()
 	else:
-		ai(delta)
+		ai()
 	
-func playerControll(delta):
+func playerControll():
 	var movement = Vector2(0, 0)
 	
 	if Input.is_action_pressed("down"):
@@ -67,7 +67,7 @@ func playerControll(delta):
 	self.move_and_slide(movement.rotated(self.rotation) * moveSpeed)
 	canon.look_at(get_global_mouse_position())
 
-func ai(delta):
+func ai():
 	if !Global.playerExists():
 		return
 	
@@ -77,17 +77,17 @@ func ai(delta):
 	var nextWantedPosition: Vector2 = path[0]
 	
 	var rayCast = get_world_2d().direct_space_state.intersect_ray(
-		self.position,
-		Global.getGlobalPlayerPosition(),
+		self.shootPoint.global_position,
+		Global.getPLayerInstance().shootPoint.global_position,
 		[self, Global.getPLayerInstance()]
 	)
 	
 	canon.look_at(Global.getGlobalPlayerPosition())
 	if rayCast.empty():
 		shoot()
-	else:
-		self.rotation = lerp_angle(self.rotation, nextWantedPosition.angle_to_point(self.position), 0.02)
-		self.move_and_slide(Vector2(1, 0).rotated(self.rotation) * moveSpeed)
+	
+	self.rotation = lerp_angle(self.rotation, nextWantedPosition.angle_to_point(self.position), 0.02)
+	self.move_and_slide(Vector2(1, 0).rotated(self.rotation) * moveSpeed)
 		
 		
 func shoot():
