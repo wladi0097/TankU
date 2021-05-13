@@ -1,12 +1,14 @@
 extends Node
 
+var maps = [
+	preload("res://maps/Map_01.tscn"),
+	preload("res://maps/Map_02.tscn")
+]
+
 func _ready():
 	OS.set_current_screen(1)
 	OS.window_maximized = true
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
 var player
 func playerExists() -> bool:
 	return is_instance_valid( player )
@@ -20,6 +22,6 @@ func getPLayerInstance():
 func getNavigationPolygonFromTileMap(tileMap: TileMap) -> NavigationPolygon:
 	return tileMap.tile_set.tile_get_navigation_polygon(1)
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+func _input(event):
+	if event.is_action_pressed("reset"):
+		get_tree().change_scene("res://layout/Main.tscn")
