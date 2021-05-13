@@ -19,6 +19,7 @@ var rotationSpeed = 2
 var bulletSpeed = 350
 var canShoot = true
 var isDead = false
+var rnd = RandomNumberGenerator.new()
 
 func _ready():
 	shootTimer.connect("timeout", self, "enableShoot")
@@ -72,7 +73,6 @@ func ai():
 		return
 	
 	var path = navigation.get_simple_path(self.position, Global.getGlobalPlayerPosition())
-	line.points = path
 	path.remove(0)
 	var nextWantedPosition: Vector2 = path[0]
 	
@@ -106,6 +106,6 @@ func shoot():
 
 func die():
 	isDead = true
-	animationPLayer.play("die")
+	animationPLayer.play("die" + String(rnd.randi_range(0, 2)))
 	yield(animationPLayer, "animation_finished")
 	queue_free()
