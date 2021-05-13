@@ -4,7 +4,8 @@ var speed = 200
 var velocity = Vector2()
 var isActive = false
 
-onready var ExplosionArea := $ExplosionArea
+onready var explosionArea := $ExplosionArea
+onready var hitArea := $HitArea
 onready var animationPlayer := $AnimationPlayer
 onready var collisionShape := $CollisionShape2D
 onready var sprite := $Sprite
@@ -29,7 +30,7 @@ func _on_HitArea_body_entered(body):
 	checkAndDestroy()
 
 func checkAndDestroy():
-	var bodies = ExplosionArea.get_overlapping_bodies()
+	var bodies = explosionArea.get_overlapping_bodies()
 	if !bodies.empty():
 		for body in bodies:
 			body.die()
@@ -38,5 +39,6 @@ func checkAndDestroy():
 func _on_ActivationTimer_timeout():
 	isActive = true
 	sprite.playing = true
-	checkAndDestroy()
+	if !hitArea.get_overlapping_bodies().empty():
+		checkAndDestroy()
 	set_mode(RigidBody2D.MODE_STATIC)
