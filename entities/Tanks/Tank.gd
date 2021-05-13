@@ -4,7 +4,9 @@ export var isPlayer : bool = false
 
 onready var canon := $canon
 onready var shootPoint := $canon/Shootpoint
+onready var minePoint := $Minepoint
 onready var shootTimer := $ShootTimer
+onready var mineTimer := $MineTimer
 onready var collision := $MainCollision
 onready var bulletDetectCollision := $BulletCollision/CollisionPolygon2D
 onready var camera := $Camera2D
@@ -13,16 +15,19 @@ onready var animationPLayer := $AnimationPlayer
 onready var bullet = preload("res://entities/projectiles/Bullet.tscn")
 onready var navigation: Navigation2D = get_parent()
 onready var line: Line2D = get_parent().get_node("Line2D")
+onready var mine = preload("res://entities/projectiles/Mine.tscn")
 
 var moveSpeed = 300
 var rotationSpeed = 2
 var bulletSpeed = 350
 var canShoot = true
+var canPlaceMine = true
 var isDead = false
 var rnd = RandomNumberGenerator.new()
 
 func _ready():
 	shootTimer.connect("timeout", self, "enableShoot")
+	mineTimer.connect("timeout", self, "enableMine")
 	if isPlayer:
 		Global.player = self
 	else:
@@ -33,8 +38,11 @@ func _ready():
 func enableShoot():
 	canShoot = true
 	
+func enableMine():
+	canPlaceMine = true
+	
 func _on_BulletCollision_body_entered(enteredBullet):
-	enteredBullet.destroySelf()
+	enteredBullet.die()
 	die()
 
 func _input(event):
@@ -43,6 +51,9 @@ func _input(event):
 		
 	if event.is_action_pressed("leftClick"):
 		shoot()
+		
+	if event.is_action_pressed("spacebar"):
+		shootMine()
 		
 func _physics_process(_delta):
 	if isDead:
@@ -103,6 +114,20 @@ func shoot():
 	get_tree().get_root().call_deferred("add_child", bullet_instance)
 	$canon/CPUParticles2D.emitting = true
 	shootTimer.start()
+
+func shootMine():
+	if !canPlaceMine:
+		return
+
+	canPlaceMine = false
+
+	var mine_instance = mine.instance()
+	mine_instance.position = minePoint.global_position
+	mine_instance.set_direction(Vector2(-1, 0).rotated(self.global_rotation))
+	mine_instance.apply_impulse(Vector2(), mine_instance.get_velocity())
+	
+	get_tree().get_root().call_deferred("add_child", mine_instance)
+	mineTimer.start()
 
 func die():
 	isDead = true
