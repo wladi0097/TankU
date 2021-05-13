@@ -18,16 +18,16 @@ func _physics_process(delta):
 	
 		if "Bullet" in collision.collider.name:
 			destroyOther(collision.collider)
-			destroySelf()
+			die()
 		
 		if bouncesLeft == 0:
-			destroySelf()
+			die()
 		bouncesLeft -= 1
 
 func set_bullet_direction(direction: Vector2):
 	velocity = direction * speed
 	
-func destroySelf():
+func die():
 	destroyOther(self)
 	
 func destroyOther(bulletEntity):
