@@ -94,8 +94,8 @@ func ai():
 	)
 	
 	canon.look_at(Global.getGlobalPlayerPosition())
-#	if rayCast.empty():
-#		shoot()
+	if rayCast.empty():
+		shoot()
 	
 	self.rotation = lerp_angle(self.rotation, nextWantedPosition.angle_to_point(self.position), 0.02)
 	self.move_and_slide(Vector2(1, 0).rotated(self.rotation) * moveSpeed)
