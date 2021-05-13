@@ -34,7 +34,7 @@ polygon = PoolVector2Array( -31.6739, -25.0857, 25.9112, -25.1741, 32.0983, -17.
 [node name="ShootTimer" type="Timer" parent="."]
 
 [node name="canon" type="Node2D" parent="."]
-position = Vector2( -3.14981, 0.314987 )
+position = Vector2( -3.15, 0 )
 __meta__ = {
 "_edit_lock_": true
 }
@@ -47,7 +47,7 @@ __meta__ = {
 }
 
 [node name="Shootpoint" type="Node2D" parent="canon"]
-position = Vector2( 57.6748, 0.018776 )
+position = Vector2( 57.719, 0 )
 
 [node name="CPUParticles2D" type="CPUParticles2D" parent="canon"]
 position = Vector2( 44.7449, -0.0992126 )

@@ -11,6 +11,8 @@ onready var camera := $Camera2D
 onready var sprite := $Sprite
 onready var animationPLayer := $AnimationPlayer
 onready var bullet = preload("res://entities/projectiles/Bullet.tscn")
+onready var navigation: Navigation2D = get_parent()
+onready var line: Line2D = get_parent().get_node("Line2D")
 
 var moveSpeed = 300
 var rotationSpeed = 2
@@ -23,6 +25,7 @@ func _ready():
 	if isPlayer:
 		Global.player = self
 	else:
+		self.moveSpeed = 150
 		camera.current = false
 	pass
 	
@@ -44,10 +47,12 @@ func _physics_process(delta):
 	if isDead:
 		return
 	
-	if !isPlayer:
+	if isPlayer:
+		playerControll(delta)
+	else:
 		ai(delta)
-		return
 	
+func playerControll(delta):
 	var movement = Vector2(0, 0)
 	
 	if Input.is_action_pressed("down"):
@@ -59,17 +64,31 @@ func _physics_process(delta):
 	if Input.is_action_pressed("right"):
 		self.rotation_degrees += rotationSpeed;
 		
-	movement = movement.rotated(self.rotation)
-	self.move_and_slide(movement * moveSpeed)
-	
+	self.move_and_slide(movement.rotated(self.rotation) * moveSpeed)
 	canon.look_at(get_global_mouse_position())
 
 func ai(delta):
 	if !Global.playerExists():
 		return
-		
+	
+	var path = navigation.get_simple_path(self.position, Global.getGlobalPlayerPosition())
+	line.points = path
+	path.remove(0)
+	var nextWantedPosition: Vector2 = path[0]
+	
+	var rayCast = get_world_2d().direct_space_state.intersect_ray(
+		self.position,
+		Global.getGlobalPlayerPosition(),
+		[self, Global.getPLayerInstance()]
+	)
+	
 	canon.look_at(Global.getGlobalPlayerPosition())
-	shoot()
+	if rayCast.empty():
+		shoot()
+	else:
+		self.rotation = lerp_angle(self.rotation, nextWantedPosition.angle_to_point(self.position), 0.02)
+		self.move_and_slide(Vector2(1, 0).rotated(self.rotation) * moveSpeed)
+		
 		
 func shoot():
 	if !canShoot:
@@ -79,7 +98,6 @@ func shoot():
 
 	var bullet_instance = bullet.instance()
 	bullet_instance.position = shootPoint.global_position
-	bullet_instance.look_at(get_global_mouse_position())
 	bullet_instance.set_bullet_direction(Vector2(1, 0).rotated(canon.global_rotation))
 	
 	get_tree().get_root().call_deferred("add_child", bullet_instance)
