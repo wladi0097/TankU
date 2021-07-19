@@ -22,6 +22,19 @@ func getPLayerInstance():
 func getNavigationPolygonFromTileMap(tileMap: TileMap) -> NavigationPolygon:
 	return tileMap.tile_set.tile_get_navigation_polygon(1)
 
+func dead():
+	DeathScreen.show()
+
 func _input(event):
+	if event.is_action_pressed("menu"):
+		loadMainMenu()
 	if event.is_action_pressed("reset"):
-		get_tree().change_scene("res://layout/Main.tscn")
+		reloadMap()
+
+func loadMainMenu():
+	DeathScreen.hide()
+	get_tree().change_scene("res://layout/Main.tscn")
+	
+func reloadMap():
+	DeathScreen.hide()
+	get_tree().reload_current_scene()

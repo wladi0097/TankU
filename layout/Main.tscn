@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://ressources/mainFont.tres" type="DynamicFont" id=2]
+[ext_resource path="res://ressources/main_font.tres" type="DynamicFont" id=1]
+[ext_resource path="res://ressources/headerFont.tres" type="DynamicFont" id=2]
 [ext_resource path="res://layout/Main.gd" type="Script" id=3]
 [ext_resource path="res://ressources/tank_canon.png" type="Texture" id=4]
 
@@ -69,3 +70,65 @@ margin_bottom = 70.0
 rect_min_size = Vector2( 0, 30 )
 text = "   Credits     "
 icon = ExtResource( 4 )
+
+[node name="credits" type="Control" parent="."]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="credits"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.215686, 0.215686, 0.215686, 1 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="credits"]
+anchor_left = -0.00116134
+anchor_right = 0.998839
+anchor_bottom = 1.0
+margin_left = 10.0
+margin_top = 10.0
+margin_right = -10.0
+margin_bottom = -10.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HSeparator" type="HSeparator" parent="credits/VBoxContainer"]
+margin_right = 1004.0
+margin_bottom = 4.0
+
+[node name="Label" type="Label" parent="credits/VBoxContainer"]
+margin_top = 8.0
+margin_right = 1004.0
+margin_bottom = 33.0
+custom_fonts/font = ExtResource( 1 )
+text = "Credits"
+align = 1
+
+[node name="HSeparator2" type="HSeparator" parent="credits/VBoxContainer"]
+margin_top = 37.0
+margin_right = 1004.0
+margin_bottom = 41.0
+
+[node name="Label2" type="RichTextLabel" parent="credits/VBoxContainer"]
+margin_top = 45.0
+margin_right = 1004.0
+margin_bottom = 305.0
+custom_fonts/normal_font = ExtResource( 1 )
+text = "Made by:
+
+* TheRealWlad (Wladi0097)
+* Justin-SG
+
+Tools:
+
+* Engine: Godot
+* Sprites: Aseprite
+* Font: Press2Start2p"
+fit_content_height = true
+
+[connection signal="button_down" from="VBoxContainer/HBoxContainer2/Button" to="." method="_on_Button_button_down"]
+[connection signal="gui_input" from="credits" to="." method="_on_credits_gui_input"]

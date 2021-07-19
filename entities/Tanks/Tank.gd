@@ -1,6 +1,14 @@
 extends KinematicBody2D
 
+enum TankType {
+	normal,
+	dozer,
+	stationary,
+	chungus
+}
+
 export var isPlayer : bool = false
+export(TankType) var tankType = TankType.normal
 
 onready var canon := $canon
 onready var shootPoint := $canon/Shootpoint
@@ -8,14 +16,18 @@ onready var minePoint := $Minepoint
 onready var shootTimer := $ShootTimer
 onready var mineTimer := $MineTimer
 onready var collision := $MainCollision
+onready var bulletCollision:= $BulletCollision
 onready var bulletDetectCollision := $BulletCollision/CollisionPolygon2D
 onready var camera := $Camera2D
 onready var sprite := $Sprite
 onready var animationPLayer := $AnimationPlayer
-onready var bullet = preload("res://entities/projectiles/Bullet.tscn")
 onready var navigation: Navigation2D = get_parent()
 onready var line: Line2D = get_parent().get_node("Line2D")
+
+onready var bullet = preload("res://entities/projectiles/Bullet.tscn")
+onready var bigBullet = preload("res://entities/projectiles/BigBullet.tscn")
 onready var mine = preload("res://entities/projectiles/Mine.tscn")
+onready var usedBullet: PackedScene = bullet
 
 var moveSpeed = 300
 var rotationSpeed = 2
@@ -28,12 +40,32 @@ var rnd = RandomNumberGenerator.new()
 func _ready():
 	shootTimer.connect("timeout", self, "enableShoot")
 	mineTimer.connect("timeout", self, "enableMine")
+	
 	if isPlayer:
+		self.set_collision_layer_bit(1, true)
+		bulletCollision.set_collision_mask_bit(2, true)
 		Global.player = self
 	else:
-		self.moveSpeed = 150
-		camera.current = false
-	pass
+		self.set_collision_layer_bit(2, true)
+		bulletCollision.set_collision_mask_bit(1, true)
+		setPropertiesFromTankType()
+	
+func setPropertiesFromTankType():
+	camera.current = false
+	
+	match self.tankType:
+		TankType.normal:
+			moveSpeed = 150
+		TankType.dozer:
+			canShoot = false
+			moveSpeed = 500
+		TankType.stationary:
+			moveSpeed = 0
+		TankType.chungus:
+			usedBullet = bigBullet
+			shootTimer.wait_time = 3
+			moveSpeed = 50
+			bulletSpeed = 200
 	
 func enableShoot():
 	canShoot = true
@@ -107,7 +139,8 @@ func shoot():
 		
 	canShoot = false
 
-	var bullet_instance = bullet.instance()
+	var bullet_instance = usedBullet.instance()
+	bullet_instance.speed = bulletSpeed
 	bullet_instance.position = shootPoint.global_position
 	bullet_instance.set_bullet_direction(Vector2(1, 0).rotated(canon.global_rotation))
 	
@@ -133,4 +166,15 @@ func die():
 	isDead = true
 	animationPLayer.play("die" + String(rnd.randi_range(0, 2)))
 	yield(animationPLayer, "animation_finished")
+	
+	var enemyTanksCount = 0
+	for node in get_parent().get_children():
+		if "Tank" in node.name:
+			enemyTanksCount += 1
+	
+	print(enemyTanksCount)
+	
+	if isPlayer:
+		Global.dead()
+	
 	queue_free()

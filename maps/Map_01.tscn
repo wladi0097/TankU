@@ -4,6 +4,7 @@
 [ext_resource path="res://ressources/Tileset.tres" type="TileSet" id=2]
 
 [node name="Map_01" type="Node2D"]
+position = Vector2( 60.4762, 0 )
 
 [node name="Navigation2D" type="Navigation2D" parent="."]
 
@@ -18,6 +19,11 @@ position = Vector2( 165.766, 126.648 )
 isPlayer = true
 
 [node name="Tank5" parent="Navigation2D" instance=ExtResource( 1 )]
-position = Vector2( 1135.92, 327.514 )
+position = Vector2( 673.529, 497.877 )
+tankType = 3
+
+[node name="Tank6" parent="Navigation2D" instance=ExtResource( 1 )]
+position = Vector2( 649.876, 340.902 )
+tankType = 3
 
 [node name="Line2D" type="Line2D" parent="Navigation2D"]

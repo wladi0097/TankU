@@ -92,8 +92,7 @@ tracks/1/keys = {
 }
 
 [node name="Tank" type="KinematicBody2D"]
-collision_layer = 3
-collision_mask = 2147483651
+collision_mask = 2147483652
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
@@ -119,7 +118,7 @@ __meta__ = {
 }
 
 [node name="Shootpoint" type="Node2D" parent="canon"]
-position = Vector2( 57.719, 0 )
+position = Vector2( 76.2396, 0.140308 )
 
 [node name="CPUParticles2D" type="CPUParticles2D" parent="canon"]
 position = Vector2( 44.7449, -0.0992126 )
@@ -154,7 +153,7 @@ current = true
 smoothing_enabled = true
 
 [node name="BulletCollision" type="Area2D" parent="."]
-collision_layer = 24
+collision_layer = 0
 collision_mask = 24
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="BulletCollision"]
